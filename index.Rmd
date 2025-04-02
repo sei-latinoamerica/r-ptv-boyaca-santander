@@ -1,0 +1,155 @@
+---
+title: "Región Boyacá-Santander"
+author: "SEI Latam"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    social: menu
+    source_code: embed
+
+---
+
+```{r setup, include=FALSE}
+library(sf)
+library(highcharter)
+library(flexdashboard)
+
+thm <- 
+  hc_theme(
+    colors = c("#1a6ecc", "#434348", "#90ed7d"),
+    chart = list(
+      backgroundColor = "transparent",
+      style = list(fontFamily = "Source Sans Pro")
+    ),
+    xAxis = list(
+      gridLineWidth = 1
+    )
+  )
+
+```
+DEMANDA HÍDRICA HISTÓRICA
+=======================================================================
+
+Column {.tabset data-width=600}
+-----------------------------------------------------------------------
+
+### SECTOR AGRÍCOLA [Hm³ año⁻¹]
+
+```{r}
+# Cargar datos
+mapa_list <- readRDS("./www/data/demandaHidrica/historica/agricola/mapa_list.rds")
+mapa_df   <- readRDS("./www/data/demandaHidrica/historica/agricola/mapa_df.rds")
+colstops  <- readRDS("./www/data/demandaHidrica/historica/agricola/colstops.rds")
+
+# Definir los intervalos y colores
+breaks <- c(0, 1.7, 7.0, 20.1, 60.7, 150)
+labels <- c("0.0-1.7", "1.7-7.0", "7.0-20.1", "20.1-60.7", "60.7+")
+colores <- c("#f9fdcd", "#daf0b2", "#a4d99a", "#65ba7c", "#439365")
+
+# Crear gráfico
+highchart() %>%
+    hc_add_series_map(
+        map = mapa_list, 
+        df = mapa_df, 
+        name = "Demanda Agrícola", 
+        value = "DEM_AGR",  # <- Asegura que sea numérico
+        joinBy = "Name",
+        dataLabels = list(enabled = FALSE),
+        tooltip = list(pointFormat = "{point.Name}: {point.value} Hm³/año") # <- Usa {point.value}
+    ) %>%
+    hc_colorAxis(
+        stops = colstops, 
+        type = "category",
+        dataClasses = lapply(seq_along(labels), function(i) {
+            list(from = breaks[i], to = breaks[i+1], color = colores[i], name = labels[i])
+        })
+    ) %>%
+    hc_mapNavigation(enabled = TRUE)
+
+```
+### SECTOR PECUARIO [Hm³ año⁻¹]
+
+```{r}
+# Cargar datos
+mapa_list <- readRDS("./www/data/demandaHidrica/historica/pecuaria/mapa_list.rds")
+mapa_df   <- readRDS("./www/data/demandaHidrica/historica/pecuaria/mapa_df.rds")
+colstops  <- readRDS("./www/data/demandaHidrica/historica/pecuaria/colstops.rds")
+
+# Definir los intervalos y colores
+breaks <- c(0.0, 0.247, 0.511, 0.842, 1.834, 2.5)
+labels <- c("0.003-0.247", "0.247-0.511", "0.511-0.842", "0.842-1.834", "1.834+")
+colores <- c("#feefd9", "#fdd9ad", "#fdb288", "#f1816b", "#d34941")
+
+# Crear gráfico
+highchart() %>%
+    hc_add_series_map(
+        map = mapa_list, 
+        df = mapa_df, 
+        name = "Demanda Pecuaria", 
+        value = "DEM_PEC",  # <- Asegura que sea numérico
+        joinBy = "Name",
+        dataLabels = list(enabled = FALSE),
+        tooltip = list(pointFormat = "{point.Name}: {point.value} Hm³/año") # <- Usa {point.value}
+    ) %>%
+    hc_colorAxis(
+        stops = colstops, 
+        type = "category",
+        dataClasses = lapply(seq_along(labels), function(i) {
+            list(from = breaks[i], to = breaks[i+1], color = colores[i], name = labels[i])
+        })
+    ) %>%
+    hc_mapNavigation(enabled = TRUE) 
+
+```
+### SECTOR AGUA POTABLE [Hm³ año⁻¹]
+
+```{r}
+# Cargar datos
+mapa_list <- readRDS("./www/data/demandaHidrica/historica/domiciliaria/mapa_list.rds")
+mapa_df   <- readRDS("./www/data/demandaHidrica/historica/domiciliaria/mapa_df.rds")
+colstops  <- readRDS("./www/data/demandaHidrica/historica/domiciliaria/colstops.rds")
+
+# Definir los intervalos y colores
+breaks <- c(0.0, 0.44, 1.44, 3.15, 8.65, 13)
+labels <- c("0.0-0.44", "0.44-1.44", "1.44-3.15","3.15-8.65", "8.65+")
+colores <- c("#e9f2f7", "#c7d9e9", "#a9b7d8", "#a287c0", "#9d56a5")
+
+# Crear gráfico
+highchart() %>%
+    hc_add_series_map(
+        map = mapa_list, 
+        df = mapa_df, 
+        name = "Demanda Domiciliaria", 
+        value = "DEM_DOM",  # <- Asegura que sea numérico
+        joinBy = "Name",
+        dataLabels = list(enabled = FALSE),
+        tooltip = list(pointFormat = "{point.Name}: {point.value} Hm³/año") # <- Usa {point.value}
+    ) %>%
+    hc_colorAxis(
+        stops = colstops, 
+        type = "category",
+        dataClasses = lapply(seq_along(labels), function(i) {
+            list(from = breaks[i], to = breaks[i+1], color = colores[i], name = labels[i])
+        })
+    ) %>%
+    hc_mapNavigation(enabled = TRUE) 
+
+```
+
+Column {data-width=400}
+-----------------------------------------------------------------------
+
+### Demanda Total [Hm³ año⁻¹]
+
+```{r, fig.keep='none'}
+tablaDatosHistoricos <- readRDS("./www/data/demandaHidrica/tablaDatosHistoricos.rds")
+
+# Crear gráfico de barras en Highcharter
+hchart(tablaDatosHistoricos,
+       type = "bar",
+       hcaes(x = Name, y = DEM_TOT),
+       name = "Demanda Total") %>%
+    hc_xAxis(title = list(text = "Cuenca")) %>%
+    hc_yAxis(title = list(text = "Valor de la Demanda"))
+
+```
