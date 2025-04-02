@@ -139,17 +139,54 @@ highchart() %>%
 Column {data-width=400}
 -----------------------------------------------------------------------
 
-### Demanda Total [Hm³ año⁻¹]
+### Consulta de Demandas por Cuencas
+<input type="text" id="nameFilter" placeholder="Filtrar por Cuenca">
 
-```{r, fig.keep='none'}
-tablaDatosHistoricos <- readRDS("./www/data/demandaHidrica/tablaDatosHistoricos.rds")
+<div id="grafico-container" style="width:100%; height:500px;"></div>
 
-# Crear gráfico de barras en Highcharter
-hchart(tablaDatosHistoricos,
-       type = "bar",
-       hcaes(x = Name, y = DEM_TOT),
-       name = "Demanda Total") %>%
-    hc_xAxis(title = list(text = "Cuenca")) %>%
-    hc_yAxis(title = list(text = "Valor de la Demanda"))
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script>
+    // Cargar el JSON con Fetch API
+    fetch("./www/data/demandaHidrica/tablaDatosHistoricos.json")
+        .then(response => response.json())
+        .then(datos => {
+            let datosOriginales = datos; // Guardar los datos originales para el filtro
 
-```
+            function actualizarGrafico(filtroCuenca = "") {
+                let datosFiltrados = { Name: [], DEM_PEC: [], DEM_DOM: [], DEM_AGR: [], DEM_TOT: [] };
+
+                for (let i = 0; i < datosOriginales.Name.length; i++) {
+                    if (datosOriginales.Name[i].toLowerCase().includes(filtroCuenca.toLowerCase())) {
+                        datosFiltrados.Name.push(datosOriginales.Name[i]);
+                        datosFiltrados.DEM_PEC.push(datosOriginales.DEM_PEC[i]);
+                        datosFiltrados.DEM_DOM.push(datosOriginales.DEM_DOM[i]);
+                        datosFiltrados.DEM_AGR.push(datosOriginales.DEM_AGR[i]);
+                        datosFiltrados.DEM_TOT.push(datosOriginales.DEM_TOT[i]);
+                    }
+                }
+
+                Highcharts.chart("grafico-container", {
+                    chart: { type: "bar" },
+                    title: { text: "Demanda Hídrica por Cuenca" },
+                    xAxis: { categories: datosFiltrados.Name },
+                    yAxis: { title: { text: "Valor de la Demanda" } },
+                    series: [
+                        { name: "PECUARIA", data: datosFiltrados.DEM_PEC, color: "#d34941" },
+                        { name: "AGUA POTABLE", data: datosFiltrados.DEM_DOM, color: "#9d56a5" },
+                        { name: "AGRICOLA", data: datosFiltrados.DEM_AGR, color: "#439365" },
+                        { name: "TOTAL", data: datosFiltrados.DEM_TOT, color: "#4f71b3" }
+                    ]
+                });
+            }
+
+            // Manejar cambios en el filtro de Nombre (ahora Cuenca)
+            document.getElementById("nameFilter").addEventListener("input", function() {
+                actualizarGrafico(this.value);
+            });
+
+            // Renderizar el gráfico por primera vez con todos los datos
+            actualizarGrafico();
+        })
+        .catch(error => console.error("Error cargando JSON:", error));
+</script>
+
