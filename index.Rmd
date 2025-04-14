@@ -4,15 +4,15 @@ author: "SEI Latam"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
-    social: menu
-    source_code: embed
-
 ---
 
 ```{r setup, include=FALSE}
 library(sf)
 library(highcharter)
 library(flexdashboard)
+library(jsonlite)
+library(dplyr)
+library(tidyr)
 
 thm <- 
   hc_theme(
@@ -27,11 +27,468 @@ thm <-
   )
 
 ```
-DEMANDA HÍDRICA HISTÓRICA
-=======================================================================
+# INICIO
+<p>DESCRIPCIÓN DEL PROYECTO</p>
 
-Column {.tabset data-width=600}
------------------------------------------------------------------------
+# CARACTERIZACIÓN HIDROCLIMATOLÓGICA {data-navmenu="HIDROCLIMATOLOGÍA"}
+## Teoría {.tabset data-width="600"}
+Este apartado presenta la caracterización de las variables precipitación y evapotranspiración potencial y caudal. El informe final, detalla de igua manera la disponibilidad de otras variables en la región tales como humedad relativa, radiación solar, brillo solar y evaporación, que por su baja cantidad de registros no logran representar las condiciones de la zona de estudio y por tanto no fueron procesadas en términos de atípicos y calidad.
+
+La principal fuente de información hidroclimatológica medida in situ fue la red nacional de estaciones del [IDEAM](http://www.ideam.gov.co) En la **Figura 1** se presenta la localización de las estaciones climatológicas existentes en la región, donde el color verde claro representa a estaciones con solo registros de precipitación y el verde oscuro a aquellas con registros de precipitación y temperatura. Del mismo modo, la **Figura 2** representa la localización de las estaciones hidrológicas, donde el azul indica existencia de registros de caudal. 
+
+Las series de precipitación y temperatura fueron analizadas de manera individual y en los clústeres generados en la sección 1.3 (del informe final), mientras que las series de caudal se analizaron de forma individual. El análisis aplicado corresponde al de calidad de información hidroclimatológica, el cual incluyó siguió las siguientes etapas:
+
+1.	Análisis de disponibilidad. Se filtro las estaciones que tuvieran menos del 30 % de información faltante en su serie de tiempo en el periodo 1980-2022.
+2.	Análisis de datos atípicos. En donde se detectó la existencia de valores anómalos para la variable analizada, principalmente los datos que excedieran el umbral superior del método de análisis usado.
+3.	Análisis de homogeneidad. En donde se identificó mediante la prueba de Pettit la consistencia de las series en el periodo de análisis propuesto, y con esto identificar si el punto de inflexión de la serie de tiempo es significativo o no.
+En cuanto a la identificación de atípicos se partió de que estos valores son aquellos que se alejan significativamente de las demás observaciones en el mismo grupo de datos. Para la identificación de datos atípicos a nivel de estación se construyeron boxplots mensuales y se marcaron como valores atípicos aquellos que se encuentran por debajo de Q1-1.5RI y por encima de los valores de: Q3+1.5RI, siendo Q1 y Q3 los cuantiles 1 y 3, y RI el rango intercuartílico estimado como Q3-Q1.
+
+Cabe resaltar que los boxplots no proporcionan información sobre la distribución subyacente de los datos y ofrecen una detección algo arbitraria de valores atípicos, especialmente en distribuciones no normales (Kampstra, 2008), (Krzywinski, 2014). Por lo tanto, el que sea detectado no implica que corresponda a un dato fuera de lo normal.
+
+Para analizar la disponibilidad de información diaria de caudal se realizó el conteo de datos disponibles en cada uno de los días del periodo de análisis (ver **Figura 6**). Para la región existe una disponibilidad de entre 20 y 60 estaciones diarias. El menor número de estaciones se encuentra al final del periodo de análisis y durante cortos periodos de tiempo alrededor de los años 1998, 2002 y en el periodo 2012-2017 en los que se llega a tener menos de 40 estaciones disponibles.
+
+## Figuras {.tabset data-width="400"}
+### Figura 1. Localización estaciones climatológicas
+<img src="./www/data/climatologia/png/Figura1.png" alt="Figura 1" width="100%">
+
+### Figura 2. Localización estaciones hidrológicas
+<img src="./www/data/climatologia/png/Figura2.png" alt="Figura 2" width="100%">
+
+# PRECIPITACIÓN {data-navmenu="HIDROCLIMATOLOGÍA"}
+## Mapa {.tabset data-width="400"}
+### Mapa
+```{r}
+# --- Carga de Datos ---
+mapa_list               <- readRDS("./www/data/climatologia/historica/P/mapa_list.rds")
+mapa_df                 <- readRDS("./www/data/climatologia/historica/P/mapa_df.rds")
+datos_serie_tiempo_long <- readRDS("./www/data/climatologia/historica/P/datos_serie_tiempo_long.rds")
+
+# --- Definición de Rangos y Colores (Igual) ---
+breaks <- c(450, 855, 1260, 1665, 2070, 2475, 2880, 3285, 3690, 4095, 4500)
+labels <- c("[450 - 855)", "[855 - 1260)", "[1260 - 1665)", "[1665 - 2070)",
+            "[2070 - 2475)", "[2475 - 2880)", "[2880 - 3285)", "[3285 - 3690)",
+            "[3690 - 4095)", "[4095 - 4500)")
+colores <- c("#ffffdb", "#edf9af", "#c9e6b8", "#7bcfba", "#44b4c2", "#1d91c0",
+             "#1f5fa4", "#243495", "#081b58", "#0002ff")
+dataClasses <- lapply(seq_along(labels), function(i) {
+  list(from = breaks[i], to = breaks[i+1], color = colores[i], name = labels[i])
+})
+
+# --- Creación del Gráfico del Mapa ---
+highchart() %>%
+  hc_chart(
+    userData = list(serieTiempo = datos_serie_tiempo_long)
+  ) %>%
+  hc_add_series_map(
+    map = mapa_list,
+    df = mapa_df,
+    name = "Promedio Total Anual Multianual",
+    value = "Promedio_Anual",
+    joinBy = "Name", 
+    dataLabels = list(enabled = FALSE),
+    tooltip = list(
+      valueDecimals = 1,
+      pointFormat = "{point.Name}: {point.value} mm/año" 
+    ),
+    events = list(
+      click = JS(
+        "function(event) {
+          var NameSeleccionada = event.point.Name;
+          var chart = event.point.series.chart;
+          var containerId = 'container_serie_tiempo_p';
+          var chartTitle = 'Serie de Tiempo de Precipitación para ' + NameSeleccionada;
+
+          console.log('--- Iniciando Click Handler (v3 - Object Adapter) ---');
+          console.log('Name Seleccionada:', NameSeleccionada);
+
+          var todosLosDatosObj; // Renombrado para claridad
+
+          try {
+            todosLosDatosObj = chart.options.chart.userData.serieTiempo;
+
+            // Verificar si es un objeto y tiene las columnas esperadas (como arrays)
+            if (typeof todosLosDatosObj !== 'object' || todosLosDatosObj === null || !Array.isArray(todosLosDatosObj.Name) || !Array.isArray(todosLosDatosObj.timestamp_ms) || !Array.isArray(todosLosDatosObj.Value)) {
+               throw new Error('userData.serieTiempo no es un objeto válido con arrays para Name, timestamp_ms, Value.');
+            }
+            console.log('Acceso a todosLosDatosObj (objeto columnar) exitoso.');
+
+          } catch (e) {
+            console.error('ERROR CRÍTICO: No se pudo acceder o validar el objeto todosLosDatosObj (serieTiempo).', e);
+             Highcharts.chart(containerId, {
+                title: { text: chartTitle }, subtitle: { text: 'Error fatal: No se pudieron localizar los datos internos (objeto).' }, series: []
+             });
+            return; // Detener
+          }
+
+          // --- Procesar el objeto columnar para obtener la serie de la Name seleccionada ---
+          var serieData = [];
+          try {
+            var nRows = todosLosDatosObj.Name.length; // Número total de 'filas'
+            for (var i = 0; i < nRows; i++) {
+              // Comparar Name (insensible al caso por seguridad)
+              if (todosLosDatosObj.Name[i] && NameSeleccionada && todosLosDatosObj.Name[i].toLowerCase() === NameSeleccionada.toLowerCase()) {
+                // Si coincide, tomar el timestamp y la precipitación de la misma posición (índice i)
+                var ts = todosLosDatosObj.timestamp_ms[i];
+                var val = todosLosDatosObj.Value[i];
+                // Añadir al array de datos del gráfico si son válidos
+                if (typeof ts === 'number' && typeof val === 'number') {
+                  serieData.push([ts, val]);
+                }
+              }
+            }
+
+            // Opcional: Ordenar por timestamp si no viene ordenado por defecto
+            serieData.sort(function(a, b) { return a[0] - b[0]; });
+
+          } catch (e) {
+             console.error('Error al procesar el objeto de datos columnar para extraer la serie:', e);
+             Highcharts.chart(containerId, {
+                title: { text: chartTitle }, subtitle: { text: 'Error: Ocurrió un problema al procesar los datos internos.' }, series: []
+             });
+             return; // Detener
+          }
+
+          console.log('Datos procesados para gráfico:', serieData.length, 'puntos.');
+
+          // --- Verificar si se generaron datos ---
+          if (serieData.length === 0) {
+            console.warn('No se encontraron/procesaron datos válidos para la Name:', NameSeleccionada);
+            Highcharts.chart(containerId, {
+              title: { text: chartTitle }, subtitle: { text: 'No hay datos de serie de tiempo disponibles para esta Name.' }, series: []
+            });
+            return;
+          }
+
+          console.log('Primer punto de datos para gráfico:', serieData[0]);
+
+          // --- Crear Gráfico ---
+          try {
+            Highcharts.chart(containerId, {
+              chart: { type: 'line', zoomType: 'x' },
+              title: { text: chartTitle },
+              subtitle: { text: 'Fuente: Datos Históricos [Clic y arrastra para hacer zoom]' },
+              xAxis: { type: 'datetime', title: { text: 'Fecha' } },
+              yAxis: { title: { text: 'Precipitación (mm)' } },
+              tooltip: { pointFormat: '{series.name}: <b>{point.y:.1f} mm</b><br/>', valueDecimals: 1, xDateFormat: '%Y-%m-%d' },
+              series: [{ name: NameSeleccionada, data: serieData, color: '#1a6ecc' }],
+              credits: { enabled: false }, exporting: { enabled: true }
+            });
+            console.log('Gráfico creado/actualizado.');
+          } catch (e) {
+            console.error('Error al crear/actualizar el gráfico:', e);
+            document.getElementById(containerId).innerHTML = 'Error al generar el gráfico: ' + e.message;
+          }
+        }"
+      ) # Fin de list(click = JS(...))
+    ) # Fin de events
+  ) %>% # Fin de hc_add_series_map
+  hc_colorAxis(dataClasses = dataClasses, type = "category") %>%
+  hc_mapNavigation(enabled = TRUE) %>%
+  hc_add_theme(thm) %>%
+  hc_title(text = "Precipitación Total Anual Multianual") %>%
+  hc_credits(enabled = TRUE, text = "Datos: IDEAM/SEI", href = "https://www.sei.org/centres/latinoamerica/")
+```
+## Serie de tiempo {data-width="600"}
+### Serie de tiempo
+<div id="container_serie_tiempo_p" style="height: 500px; width: 100%;"></div>
+
+# EVAPOTRANSPIRACIÓN {data-navmenu="HIDROCLIMATOLOGÍA"}
+## Mapa {.tabset data-width="400"}
+### Mapa
+```{r}
+# --- Carga de Datos ---
+mapa_list               <- readRDS("./www/data/climatologia/historica/ETp/mapa_list.rds")
+mapa_df                 <- readRDS("./www/data/climatologia/historica/ETp/mapa_df.rds")
+datos_serie_tiempo_long <- readRDS("./www/data/climatologia/historica/ETp/datos_serie_tiempo_long.rds")
+
+# --- Definición de Rangos y Colores (Igual) ---
+breaks <- c(907, 962, 1016, 1070, 1124, 1178, 1232, 1285, 1339, 1393, 1448)
+labels <- c("[907 - 962)",
+            "[962 - 1016)",
+            "[1016 - 1070)",
+            "[1070 - 1124)",
+            "[1124 - 1178)",
+            "[1178 - 1232)",
+            "[1232 - 1285)",
+            "[1285 - 1339)",
+            "[1339 - 1393)",
+            "[1393 - 1448)")
+
+colores <- c("#c2523c", "#d97529", "#eda813", "#f7d707", "#c6f700", "#35e300",
+             "#0ec441", "#1e9e84", "#166d8a", "#0c2f7a")
+
+dataClasses <- lapply(seq_along(labels), function(i) {
+  list(from = breaks[i], to = breaks[i+1], color = colores[i], name = labels[i])
+})
+
+# --- Creación del Gráfico del Mapa ---
+highchart() %>%
+  hc_chart(
+    userData = list(serieTiempo = datos_serie_tiempo_long)
+  ) %>%
+  hc_add_series_map(
+    map = mapa_list,
+    df = mapa_df,
+    name = "Promedio Total Anual Multianual",
+    value = "Promedio_Anual",
+    joinBy = "Name", 
+    dataLabels = list(enabled = FALSE),
+    tooltip = list(
+      valueDecimals = 1,
+      pointFormat = "{point.Name}: {point.value} mm/año" 
+    ),
+    events = list(
+      click = JS(
+        "function(event) {
+          var NameSeleccionada = event.point.Name;
+          var chart = event.point.series.chart;
+          var containerId = 'container_serie_tiempo_etp';
+          var chartTitle = 'Serie de Tiempo de Evapotranspiración para ' + NameSeleccionada;
+
+          console.log('--- Iniciando Click Handler (v3 - Object Adapter) ---');
+          console.log('Name Seleccionada:', NameSeleccionada);
+
+          var todosLosDatosObj; // Renombrado para claridad
+
+          try {
+            todosLosDatosObj = chart.options.chart.userData.serieTiempo;
+
+            // Verificar si es un objeto y tiene las columnas esperadas (como arrays)
+            if (typeof todosLosDatosObj !== 'object' || todosLosDatosObj === null || !Array.isArray(todosLosDatosObj.Name) || !Array.isArray(todosLosDatosObj.timestamp_ms) || !Array.isArray(todosLosDatosObj.Value)) {
+               throw new Error('userData.serieTiempo no es un objeto válido con arrays para Name, timestamp_ms, Value.');
+            }
+            console.log('Acceso a todosLosDatosObj (objeto columnar) exitoso.');
+
+          } catch (e) {
+            console.error('ERROR CRÍTICO: No se pudo acceder o validar el objeto todosLosDatosObj (serieTiempo).', e);
+             Highcharts.chart(containerId, {
+                title: { text: chartTitle }, subtitle: { text: 'Error fatal: No se pudieron localizar los datos internos (objeto).' }, series: []
+             });
+            return; // Detener
+          }
+
+          // --- Procesar el objeto columnar para obtener la serie de la Name seleccionada ---
+          var serieData = [];
+          try {
+            var nRows = todosLosDatosObj.Name.length; // Número total de 'filas'
+            for (var i = 0; i < nRows; i++) {
+              // Comparar Name (insensible al caso por seguridad)
+              if (todosLosDatosObj.Name[i] && NameSeleccionada && todosLosDatosObj.Name[i].toLowerCase() === NameSeleccionada.toLowerCase()) {
+                // Si coincide, tomar el timestamp y la precipitación de la misma posición (índice i)
+                var ts = todosLosDatosObj.timestamp_ms[i];
+                var val = todosLosDatosObj.Value[i];
+                // Añadir al array de datos del gráfico si son válidos
+                if (typeof ts === 'number' && typeof val === 'number') {
+                  serieData.push([ts, val]);
+                }
+              }
+            }
+
+            // Opcional: Ordenar por timestamp si no viene ordenado por defecto
+            serieData.sort(function(a, b) { return a[0] - b[0]; });
+
+          } catch (e) {
+             console.error('Error al procesar el objeto de datos columnar para extraer la serie:', e);
+             Highcharts.chart(containerId, {
+                title: { text: chartTitle }, subtitle: { text: 'Error: Ocurrió un problema al procesar los datos internos.' }, series: []
+             });
+             return; // Detener
+          }
+
+          console.log('Datos procesados para gráfico:', serieData.length, 'puntos.');
+
+          // --- Verificar si se generaron datos ---
+          if (serieData.length === 0) {
+            console.warn('No se encontraron/procesaron datos válidos para la Name:', NameSeleccionada);
+            Highcharts.chart(containerId, {
+              title: { text: chartTitle }, subtitle: { text: 'No hay datos de serie de tiempo disponibles para esta Name.' }, series: []
+            });
+            return;
+          }
+
+          console.log('Primer punto de datos para gráfico:', serieData[0]);
+
+          // --- Crear Gráfico ---
+          try {
+            Highcharts.chart(containerId, {
+              chart: { type: 'line', zoomType: 'x' },
+              title: { text: chartTitle },
+              subtitle: { text: 'Fuente: Datos Históricos [Clic y arrastra para hacer zoom]' },
+              xAxis: { type: 'datetime', title: { text: 'Fecha' } },
+              yAxis: { title: { text: 'Evapotranspiración (mm)' } },
+              tooltip: { pointFormat: '{series.name}: <b>{point.y:.1f} mm</b><br/>', valueDecimals: 1, xDateFormat: '%Y-%m-%d' },
+              series: [{ name: NameSeleccionada, data: serieData, color: '#1a6ecc' }],
+              credits: { enabled: false }, exporting: { enabled: true }
+            });
+            console.log('Gráfico creado/actualizado.');
+          } catch (e) {
+            console.error('Error al crear/actualizar el gráfico:', e);
+            document.getElementById(containerId).innerHTML = 'Error al generar el gráfico: ' + e.message;
+          }
+        }"
+      ) # Fin de list(click = JS(...))
+    ) # Fin de events
+  ) %>% # Fin de hc_add_series_map
+  hc_colorAxis(dataClasses = dataClasses, type = "category") %>%
+  hc_mapNavigation(enabled = TRUE) %>%
+  hc_add_theme(thm) %>%
+  hc_title(text = "Evapotranspiración Total Anual Multianual") %>%
+  hc_credits(enabled = TRUE, text = "Datos: IDEAM/SEI", href = "https://www.sei.org/centres/latinoamerica/")
+```
+## Serie de tiempo {data-width="600"}
+### Serie de tiempo
+<div id="container_serie_tiempo_etp" style="height: 500px; width: 100%;"></div>
+
+# CAUDALES {data-navmenu="HIDROCLIMATOLOGÍA"}
+## Teoría {.tabset data-width="600"}
+### Resultados Caudales
+La información de caudal obtenida a partir de las mediciones de nivel en cuerpos loticos es útil para caracterizar el comportamiento hidrológico de las corrientes al interior de la región Boyacá – Santander. Adicionalmente, esta información es utilizada en modelación hidrológica para la calibración de los parámetros que definen los procesos modelados.
+Para esta variable no se siguió la clasificación en clústeres utilizada para las variables climáticas, dado que la dinámica espacial de esta depende de procesos hidrológicos y geomorfológicos. Sin embargo, la característica acumulativa de la variable permite su agrupación en rangos altitudinales en los que es posible diferenciar la magnitud y el comportamiento interanual de los caudales. Esta región con una variación en la elevación de entre 10 y 3500 msnm, se clasificó las estaciones en rangos de 500 msnm. Con un total de 7 rangos altitudinales, es evidente la variación en la magnitud de los caudales desde las elevaciones superior con caudales más bajos, hasta las menores elevaciones con caudales significativamente superiores (ver **Figura 3**). Adicionalmente, para los caudales medios se destaca que en la medida que se desciende se hace más evidente el régimen bimodal con picos de caudal en los periodos abril-mayo y octubre-noviembre.
+
+Para cada una de las estaciones hidrométricas disponibles en la región se construyeron diagramas de cajas y bigotes para caracterizar el comportamiento mensual multianual en metros cúbicos por segundo como se muestra en la **Figura 4**. Los gráficos generados para las demás estaciones se encuentran disponibles en el Anexo 9 del informe final.
+
+### Disponibilidad de información
+La disponibilidad de información referida a la cantidad y dispersión de los datos en las series de caudal requirió en primer lugar la estimación del número de datos faltantes en cada mes en cada una de las estaciones. En la **Figura 5** se representa la disponibilidad de información con base en la cantidad de faltantes que se tiene para cada mes de registro en el periodo de análisis para aproximadamente 80 estaciones hidrométricas.
+
+Para analizar la disponibilidad de información diaria de caudal se realizó el conteo de datos disponibles en cada uno de los días del periodo de análisis (ver **Figura 6**). Para la región existe una disponibilidad de entre 20 y 60 estaciones diarias. El menor número de estaciones se encuentra al final del periodo de análisis y durante cortos periodos de tiempo alrededor de los años 1998, 2002 y en el periodo 2012-2017 en los que se llega a tener menos de 40 estaciones disponibles.
+
+### Evaluación de datos atípicos
+Se contabilizó la cantidad de datos atípicos de caudal en cada mes y se estimó la mediana para cada uno de los grupos (bajos y altos). Para cada estación se generaron gráficos como el de la **Figura 7**, los cuales se encuentran disponibles en el Anexo 9.
+
+### Homogeneidad y tendencia de las series
+La prueba de Pettitt fue aplicada sobre cada una de las series mensuales de temperatura y adicionalmente, se calculó la media móvil en una ventana de 12 meses para verificar la existencia de alguna tendencia en las series. La **Figura 8** presenta el resultado de la prueba para una estaciones. Las figuras generadas para la totalidad de las estaciones se encuentran disponibles en el Anexo 9. 
+
+De esta manera para estación 23197130 perteneciente al río Santa Cruz se identificó un punto de cambio en el año 1999, con una reducción en la media para el periodo posterior este año de aproximadamente 0.54 m3/s respecto al periodo 1982-1999. 
+
+## Figuras {.tabset data-width="400"}
+### Figura 3. Caracterización de caudales mensuales multianuales en rangos altitudinales
+<img src="./www/data/climatologia/png/Figura3.png" alt="Figura 3" width="90%">
+
+### Figura 4. Caracterización del régimen mensual multianual de caudales
+<img src="./www/data/climatologia/png/Figura4.png" alt="Figura 4" width="90%">
+
+### Figura 5. Disponibilidad de información de caudales medios diarios
+<img src="./www/data/climatologia/png/Figura5.png" alt="Figura 5" width="90%">
+
+### Figura 6. Número de estaciones de caudal disponibles en el periodo de análisis
+<img src="./www/data/climatologia/png/Figura6.png" alt="Figura 6" width="90%">
+
+### Figura 7. Datos atípicos en la estación 23167010
+<img src="./www/data/climatologia/png/Figura7.png" alt="Figura 7" width="90%">
+
+### Figura 8. Resultados prueba de homogeneidad de Pettitt
+<img src="./www/data/climatologia/png/Figura8.png" alt="Figura 8" width="90%">
+
+# COBERTURAS {data-navmenu="SUELOS"}
+## Mapa {.tabset data-width="700"}
+### Coberturas de la Tierra
+```{r}
+# --- Carga de Datos ---
+mapa_list    <- readRDS("./www/data/coberturas/CorineLandCover/mapa_list.rds")
+mapa_df      <- readRDS("./www/data/coberturas/CorineLandCover/mapa_df.rds")
+data_classes <- readRDS("./www/data/coberturas/CorineLandCover/data_classes.rds")
+
+# --- Definición de Rangos y Colores ---
+breaks <- c(11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 41, 51, 100)
+labels <- c("Zonas urbanizadas",
+            "Zonas industriales o comerciales y redes de comunicación",
+            "Zonas de extracción mineras y escombreras",
+            "Zonas verdes artificializadas, no agrícolas",
+            "Cultivos transitorios",
+            "Cultivos permanentes",
+            "Pastos",
+            "Áreas agrícolas heterogéneas",
+            "Bosques",
+            "Áreas con vegetación herbácea y/o arbustiva",
+            "Áreas abiertas, sin o con poca vegetación",
+            "Áreas húmedas continentales",
+            "Aguas continentales")
+colores <- c("#f24e4e", "#fa776b", "#fc8e86", "#ffa6a6", "#dbcea2", "#e3daa1",
+             "#f0eba3", "#f7f7a1", "#95c491", "#b9e099", "#dfff9e", "#cfe4f0",
+             "#7e97bd")
+
+# --- Creación del Gráfico del Mapa ---
+highchart() %>%
+  hc_add_series_map(
+    map = mapa_list,
+    df = mapa_df,
+    name = "Coberturas de la Tierra",
+    value = "nivel_2",
+    joinBy = "uid",
+    dataLabels = list(enabled = FALSE),
+    tooltip = list(
+      pointFormat = '<b>{point.nivel_2_CAT}</b>'
+    ),
+    borderWidth = 0
+  ) %>%
+  hc_colorAxis(
+    dataClasses = data_classes
+  ) %>%
+  hc_mapNavigation(enabled = TRUE) %>%
+  hc_title(text = "Coberturas de la Tierra Metodología Corine Land Cover escala 1:100.000, periodo 2018") %>%
+  hc_legend(layout = "vertical", align = "right", verticalAlign = "middle",
+            title = list(text = "Tipos de Cobertura")) %>%
+  hc_credits(enabled = TRUE, text = "Datos: IDEAM", href = "http://www.ideam.gov.co/web/ecosistemas/coberturas-tierra/")
+```
+## Sunburs {.tabset data-width="300"}
+### Gráfico Sunburs
+```{r}
+# --- Carga de Datos ---
+datos_sunburst    <- readRDS("./www/data/coberturas/CorineLandCover/datos_sunburst.rds")
+
+# Crear el Gráfico Sunburs
+hchart(
+  datos_sunburst,
+  type = "sunburst",
+  hcaes(id = id, parent = parent, name = name, value = value, color = color)
+) %>%
+  hc_title(text = "Distribución de Coberturas de la Tierra para los Niveles 1 y 2") %>%
+  hc_tooltip(
+    pointFormat = "<b>{point.name}</b>: {point.value:.2f}%",
+    valueDecimals = 2
+  ) %>%
+  hc_plotOptions(
+    sunburst = list(
+      allowDrillToNode = TRUE,
+      borderWidth = 1,
+      borderColor = "white",
+      levels = list(
+        list(
+          level = 1,
+          colorByPoint = TRUE,
+          borderColor = "white",
+          borderWidth = 2,
+          dataLabels = list(
+            enabled = TRUE,
+            format = '{point.name}',
+            style = list(fontSize = '11px', textOutline = 'none', fontWeight = 'bold', color = 'black')
+          )
+        ),
+        list(
+          level = 2,
+          colorByPoint = TRUE,
+          borderColor = "white",
+          borderWidth = 1,
+          dataLabels = list(
+            enabled = TRUE,
+            format = '{point.name}',
+            rotationMode = 'parallel',
+            style = list(fontSize = '9px', textOutline = 'none', color = 'black')
+          )
+        )
+      )
+    )
+  ) %>%
+  hc_credits(enabled = FALSE)
+```
+
+# HISTÓRICA {data-navmenu="DEMANDA HÍDRICA"}
+
+## Column {.tabset data-width="600"}
+
+### DEMANDA HÍDRICA HISTÓRICA
+
+Aquí poner la descripción de todo
 
 ### SECTOR AGRÍCOLA [Hm³ año⁻¹]
 
@@ -67,6 +524,7 @@ highchart() %>%
     hc_mapNavigation(enabled = TRUE)
 
 ```
+
 ### SECTOR PECUARIO [Hm³ año⁻¹]
 
 ```{r}
@@ -101,6 +559,7 @@ highchart() %>%
     hc_mapNavigation(enabled = TRUE) 
 
 ```
+
 ### SECTOR AGUA POTABLE [Hm³ año⁻¹]
 
 ```{r}
@@ -136,15 +595,20 @@ highchart() %>%
 
 ```
 
-Column {data-width=400}
------------------------------------------------------------------------
+## Column {data-width="400"}
 
 ### Consulta de Demandas por Cuencas
+
 <input type="text" id="nameFilter" placeholder="Filtrar por Cuenca">
 
-<div id="grafico-container" style="width:100%; height:500px;"></div>
+::: {#grafico-container style="width:100%; height:500px;"}
+:::
 
+```{=html}
 <script src="https://code.highcharts.com/highcharts.js"></script>
+```
+
+```{=html}
 <script>
     // Cargar el JSON con Fetch API
     fetch("./www/data/demandaHidrica/tablaDatosHistoricos.json")
@@ -189,4 +653,8 @@ Column {data-width=400}
         })
         .catch(error => console.error("Error cargando JSON:", error));
 </script>
+```
 
+# CAMBIO CLIMÁTICO {data-navmenu="DEMANDA HÍDRICA"}
+
+<https://rpubs.com/renzo_caceres_rossiv/dashboard_menu_ieee>
