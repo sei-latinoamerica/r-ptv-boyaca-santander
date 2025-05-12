@@ -28,6 +28,13 @@ thm <-
 
 ```
 # INICIO
+
+## Column {.tabset data-width="100%"}
+
+### INICIO
+<img src="./www/data/SEI_FA_CAEM.png" alt="SEI_FA_CAEM" width="100%">
+
+### SOBRE EL PROYECTO
 <p>Este proyecto, "Apoyo a la Implementación de Paisajes Rurales Climáticamente Inteligentes en Colombia", emprende una iniciativa científica integral para comprender y anticipar los profundos impactos del cambio climático en los recursos hídricos a lo largo de seis regiones vitales: Boyacá-Santander, Caribe-Occidental, Caribe-Oriental, Cauca-Nariño, Meta-Vichada y Tolima-Huila.</p>
 <p>Nuestro trabajo es un testimonio de metodologías de vanguardia y modelado integrado, diseñado para empoderar a los tomadores de decisiones con información sólida para un futuro resiliente. Nos hemos sumergido profundamente en la intrincada dinámica del agua, tanto superficial como subterránea, para ofrecer una imagen clara de los desafíos y oportunidades hasta el año 2050.</p>
 
@@ -49,7 +56,7 @@ thm <-
 
 <h3>3. Simulando el Pasado: Desarrollo y Validación del Modelo Hidrológico</h3>
 <ul>
-    <li>Utilizando el "Método de Humedad del Suelo" de WEAP, desarrollamos modelos hidrológicos para cada una de las 77 unidades de respuesta hidrológica (URH) delimitadas en la región. Estas URH integran datos de cuencas, municipios, tipos de suelo y coberturas terrestres, permitiendo una simulación altamente detallada del movimiento del agua.</li>
+    <li>Utilizando el "Método de Humedad del Suelo" de WEAP, desarrollamos modelos hidrológicos para cada región, integrando datos de cuencas, municipios, tipos de suelo y coberturas terrestres, permitiendo una simulación altamente detallada del movimiento del agua.</li>
     <li>Nuestros modelos se sometieron a rigurosos procesos de calibración y validación (utilizando algoritmos como DDS y métricas como KGE) contra datos históricos de caudal. Esto aseguró que los modelos representaran con precisión el comportamiento hidrológico del mundo real, brindando confianza en sus capacidades predictivas.</li>
     <li>También cuantificamos la demanda histórica de agua en sectores clave: agricultura (identificando el consumo de agua específico por cultivo y la eficiencia del riego), pecuario (considerando las necesidades de agua de los animales) y agua potable (reflejando el crecimiento de la población y la expansión urbana).</li>
     <li>Se calcularon indicadores clave del agua como el **Índice de Regulación y Retención Hídrica (IRH)**, el **Índice de Uso del Agua (IUA)** y el **Índice de Vulnerabilidad al Desabastecimiento Hídrico (IVH)** para el período histórico, ofreciendo una evaluación de referencia del estrés hídrico y la salud de los ecosistemas.</li>
@@ -531,7 +538,7 @@ hchart(
   hc_credits(enabled = FALSE)
 ```
 
-# HISTÓRICA {data-navmenu="ÍNDICES"}
+# HISTÓRICO {data-navmenu="ÍNDICES"}
 
 ## Column {.tabset data-width="400"}
 
