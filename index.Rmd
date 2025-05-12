@@ -28,7 +28,56 @@ thm <-
 
 ```
 # INICIO
-<p>DESCRIPCIÓN DEL PROYECTO</p>
+<p>Este proyecto, "Apoyo a la Implementación de Paisajes Rurales Climáticamente Inteligentes en Colombia", emprende una iniciativa científica integral para comprender y anticipar los profundos impactos del cambio climático en los recursos hídricos a lo largo de seis regiones vitales: Boyacá-Santander, Caribe-Occidental, Caribe-Oriental, Cauca-Nariño, Meta-Vichada y Tolima-Huila.</p>
+<p>Nuestro trabajo es un testimonio de metodologías de vanguardia y modelado integrado, diseñado para empoderar a los tomadores de decisiones con información sólida para un futuro resiliente. Nos hemos sumergido profundamente en la intrincada dinámica del agua, tanto superficial como subterránea, para ofrecer una imagen clara de los desafíos y oportunidades hasta el año 2050.</p>
+
+<h2>Lo Que Hicimos: Desvelando el Futuro del Agua</h2>
+<p>Nuestro enfoque fue meticulosamente estructurado, combinando diversas fuentes de datos y herramientas analíticas avanzadas:</p>
+
+<h3>1. Construyendo los Cimientos: Datos Hidroclimáticos y Herramientas de Modelado Avanzado</h3>
+<ul>
+    <li>Comenzamos reuniendo y depurando minuciosamente datos hidroclimáticos, integrando observaciones de estaciones locales con productos satelitales y de reanálisis de última generación (como CHIRPS, MSWEP y MSWX). Esto nos permitió superar la escasez de datos y asegurar una alta resolución espacial y temporal para la precipitación y la temperatura.</li>
+    <li>La evapotranspiración, un componente crucial del balance hídrico, se estimó con precisión utilizando métodos como Hargreaves-Samani y Penman-Monteith, mejorados por técnicas avanzadas de fusión de datos (RF-MEP).</li>
+    <li>Para las simulaciones hidrológicas, seleccionamos **WEAP (Water Evaluation And Planning)**, una plataforma de modelado integrada y robusta. Esta elección fue estratégica, permitiéndonos representar las complejas interacciones entre los procesos hidrológicos naturales y las actividades humanas dentro de las cuencas, incluyendo las operaciones de infraestructura y las diversas demandas de agua.</li>
+</ul>
+
+<h3>2. Caracterizando el Presente: Líneas Base Hidroclimáticas e Hidrogeológicas</h3>
+<ul>
+    <li>Realizamos una caracterización exhaustiva de los patrones hidroclimáticos de la región Boyacá-Santander, analizando datos de precipitación, temperatura y caudal. Esto implicó un riguroso control de calidad, detección de valores atípicos y análisis de homogeneidad para establecer líneas base históricas fiables (1982-2022).</li>
+    <li>Simultáneamente, mapeamos y clasificamos los sistemas hidrogeológicos de la región basándonos en estándares internacionales, identificando los tipos clave de acuíferos (intergranulares, fracturados y de recursos limitados) y sus dinámicas de flujo inherentes. Esto proporcionó una comprensión crucial del potencial de las aguas subterráneas y su interacción con las aguas superficiales.</li>
+</ul>
+
+<h3>3. Simulando el Pasado: Desarrollo y Validación del Modelo Hidrológico</h3>
+<ul>
+    <li>Utilizando el "Método de Humedad del Suelo" de WEAP, desarrollamos modelos hidrológicos para cada una de las 77 unidades de respuesta hidrológica (URH) delimitadas en la región. Estas URH integran datos de cuencas, municipios, tipos de suelo y coberturas terrestres, permitiendo una simulación altamente detallada del movimiento del agua.</li>
+    <li>Nuestros modelos se sometieron a rigurosos procesos de calibración y validación (utilizando algoritmos como DDS y métricas como KGE) contra datos históricos de caudal. Esto aseguró que los modelos representaran con precisión el comportamiento hidrológico del mundo real, brindando confianza en sus capacidades predictivas.</li>
+    <li>También cuantificamos la demanda histórica de agua en sectores clave: agricultura (identificando el consumo de agua específico por cultivo y la eficiencia del riego), pecuario (considerando las necesidades de agua de los animales) y agua potable (reflejando el crecimiento de la población y la expansión urbana).</li>
+    <li>Se calcularon indicadores clave del agua como el **Índice de Regulación y Retención Hídrica (IRH)**, el **Índice de Uso del Agua (IUA)** y el **Índice de Vulnerabilidad al Desabastecimiento Hídrico (IVH)** para el período histórico, ofreciendo una evaluación de referencia del estrés hídrico y la salud de los ecosistemas.</li>
+</ul>
+
+<h3>4. Proyectando el Futuro: Escenarios de Cambio Climático y Análisis de Impactos</h3>
+<ul>
+    <li>Aprovechando las proyecciones del **Sexto Informe de Evaluación del IPCC (AR6-IPCC)**, específicamente los escenarios SSP2-4.5 (emisiones moderadas) y SSP5-8.5 (emisiones altas) para el período 2040-2070, generamos los insumos climáticos futuros (precipitación y temperatura) para nuestros modelos hidrológicos.</li>
+    <li>Estos escenarios climáticos futuros se incorporaron en los modelos WEAP calibrados para simular sus impactos en la disponibilidad y demanda de agua. Analizamos los cambios proyectados en la **Oferta Hídrica Total Superficial (OHTS)**, y el comportamiento futuro del IRH, IUA y IVH.</li>
+    <li>Para una visión holística, integramos los conocimientos del **modelo DynQual** para evaluar la calidad del agua bajo diferentes condiciones hidroclimáticas, incluyendo el impacto de contaminantes (como coliformes fecales, DBO y sólidos suspendidos) en los índices de calidad del agua.</li>
+    <li>Un elemento crítico fue el análisis de la **dinámica de las aguas subterráneas**: analizamos datos satelitales (GRACE-GLDAS) para identificar anomalías en las aguas subterráneas y calculamos las tasas de recarga potencial. Esto nos permitió comprender cómo el cambio climático podría afectar el almacenamiento y la disponibilidad de las aguas subterráneas.</li>
+</ul>
+
+<h3>5. Forjando Resiliencia: Proponiendo Medidas de Adaptación</h3>
+<ul>
+    <li>Basándonos en el análisis exhaustivo de las condiciones hídricas presentes y futuras, identificamos áreas críticas que enfrentan un aumento del estrés hídrico o la vulnerabilidad.</li>
+    <li>Para estas áreas, propusimos medidas de adaptación específicas, que incluyen:
+        <ul>
+            <li>**Recarga Artificial de Acuíferos (RAA):** Técnicas para reponer intencionalmente las reservas de agua subterránea, utilizando el excedente de agua superficial para amortiguar los períodos secos.</li>
+            <li>**Uso Eficiente de Aguas Subterráneas Someras:** Promover la explotación sostenible de acuíferos poco profundos y la construcción de sistemas locales de recolección de agua (por ejemplo, aljibes o pozos).</li>
+            <li>**Gestión de la Intrusión Salina:** Estrategias específicas para las regiones costeras para proteger los acuíferos de agua dulce de la contaminación por agua salada debido al aumento del nivel del mar y la sobreexplotación.</li>
+            <li>**Uso Eficiente del Agua Agrícola:** Implementación de técnicas de riego avanzadas, diversificación de cultivos y mejores prácticas de gestión del agua para reducir la demanda de agua en la agricultura.</li>
+            <li>**Explotación de Medios Fracturados:** Explorar el potencial del agua almacenada en formaciones rocosas fracturadas como una fuente de agua confiable, especialmente en áreas con disminución de las aguas superficiales.</li>
+        </ul>
+    </li>
+    <li>Nuestras recomendaciones también enfatizan la importancia de la gobernanza, el desarrollo de capacidades y el monitoreo continuo para asegurar que estas estrategias de adaptación sean efectivas y sostenibles.</li>
+</ul>
+<p>Esta investigación pionera es un recurso vital para la planificación regional, la priorización de inversiones y el desarrollo de estrategias de adaptación para construir resiliencia climática en el sector hídrico de Colombia. Es un paso proactivo para salvaguardar este recurso invaluable para las comunidades y los ecosistemas en un clima cambiante.</p>
 
 # CARACTERIZACIÓN HIDROCLIMATOLÓGICA {data-navmenu="HIDROCLIMATOLOGÍA"}
 ## Teoría {.tabset data-width="600"}
@@ -482,179 +531,88 @@ hchart(
   hc_credits(enabled = FALSE)
 ```
 
-# HISTÓRICA {data-navmenu="DEMANDA HÍDRICA"}
+# HISTÓRICA {data-navmenu="ÍNDICES"}
 
-## Column {.tabset data-width="600"}
+## Column {.tabset data-width="400"}
 
-### DEMANDA HÍDRICA HISTÓRICA
+### IRH
+La estimación del IRH para la región Boyacá – Santander se presenta en la <b>Figura 9</b>. Al lado izquierdo de esta figura se puede ver la distribución espacial de las categorías obtenidas por el índice, los valores obtenidos para cada una se las cuencas se pueden ver en las etiquetas de cada polígono. Al respecto, se evidencia la disminución de la regulación y retención en dirección suroriente – noroccidente, lo que coincide con el flujo natural de las corrientes de la región. En otras palabras, por lo general las cuencas con los mejores índices se ubica en las zonas altas y los índices más bajos en las zonas bajas.
+En el costado derecho de la <b>Figura 9</b> se puede ver el porcentaje de las cuencas clasificadas por cada categoría del IRH, resaltando que ninguna de las cuencas de la región Boyacá – Santander clasificó con un IRH Muy alto. La mayoría de las cuencas (61 %) se encuentran en el rango Moderado, seguido por el 21 % de las cuencas en el rango Alto, 17 % bajo y solo un 1 % en condición muy baja. 
+Las cuencas categorizadas con IRH medio no muestran ubicación espacial de preferencia dentro de la región, sin embargo, en su mayoría corresponden a subcuencas ubicadas en la parte media. Las cuencas clasificadas en categoría Alta se ubican principalmente en las zonas altas, y las categorizadas como bajas presentan dos extremos, hay unas ubicadas hacia la desembocadura o zona más baja (noroccidente) y hay otras ubicadas en zonas altas (sur oriente).
 
-Aquí poner la descripción de todo
+### IUA
+Previo al cálculo del IUA se estimó el caudal ambiental (<b>Figura 10</b> izq) para cada una de las cuencas analizadas. Esta variable se presenta en unidades de Hm3 año-1 con el fin de hacerla compatible con las demás variables requeridas dentro del cálculo del IUA. Para la región Boyacá - Santander el caudal ambiental varía entre 0 y 401 Hm3 año-1, los valores más altos se observan hacia las altitudes medias de la región, y los valores más bajos constituyen aquellas cuencas alrededor del municipio de Duitama y del embalse de Hidrosogamoso. La zona norte y sur (antes de la desembocadura del río Sogamoso al Magdalena) estan las cuencas con menores caudales ambientales menores a 18 Hm3 año-1. Adicionalmente, se estimó la OHDS (<b>Figura 10</b> Der.) en función del OHTS y del caudal ambiental. Para la región Boyacá – Santander, esta variable se presenta entre 1 y 632 Hm3 año-1.
+El IUA para la región Boyacá – Santander se muestran en la <b>Figura 11</b>. Estos resultados evidencian que la categoría que predomina es el uso Muy Bajo, el cual representa el 44 % del total de cuencas ubicadas principalmente en las altitudes medias de la región. El 31% de las cuencas se categorizó en el uso Bajo, donde la mayoría de las cuencas se localizan en las partes altas de la región, a excepción de aquellas aledañas a la ciudad de Duitama que se reportan con usos Altos y Muy Altos. Es necesario resaltar, que se encontraron 7 cuencas en condición crítica de uso (9 % del total), estas se localizan aguas arriba del embalse de Topocoro.
+En general, se observa que las cuencas con un IUA Crítico tienen una Demanda Total muy alta en comparación con su OHDS. Por ejemplo, C16 tiene una Demanda Total de 88.94 y un OHDS de 23.17, lo que sugiere una gran discrepancia entre la demanda y la disponibilidad. Las cuencas con IUA Muy bajo tienden a tener una Demanda Total baja en relación con su OHDS. Por ejemplo, C03 tiene una Demanda Total de 0.08 y un OHDS de 12.78, lo que indica que la demanda es mínima en comparación con la disponibilidad. 
+Las cuencas con IUA crítico y muy alto requieren atención inmediata, ya que están bajo una presión significativa debido a la alta demanda de agua en relación con la oferta disponible. Las cuencas con IUA moderado deben ser vigiladas para evitar que la demanda alcance niveles críticos. Finalmente, las cuencas con IUA bajo o muy bajo tienen un suministro de agua adecuado, pero aún es importante monitorear estas áreas para garantizar que la demanda no aumente de manera desproporcionada.
 
-### SECTOR AGRÍCOLA [Hm³ año⁻¹]
+### IVH
+Los resultados del IVH para la región Boyacá – Santander se presentan en la <b>Figura 12</b>. En general, en la región Boyacá - Santander predomina una Baja vulnerabilidad al desabastecimiento para la condición base evaluada (45 cuencas – 58 % del total), la siguiente categoría con mayor dominancia es Muy Baja con nueve (9) cuencas (12 %), este resultado corresponde a las bajas demandas de agua que se tiene en estas cuencas y sugiere condiciones relativamente buenas de recursos hídricos en la mayor parte de la región. En categoría Media se tienen ocho cuencas (10 %). Sin embargo, 15 cuencas (19,5%) muestran vulnerabilidad alta o muy alta, lo que indica que en estas cuencas el uso del agua ha superado la regulación-retención y la relación oferta-demanda en el periodo base, así que su manejo debe ser priorizado.
+En términos generales las cuencas con IUA "Muy bajo" e IRH "ALTA" tienen consistentemente vulnerabilidad "Muy baja" y los valores críticos de IUA resultan en vulnerabilidad "Muy alta" independientemente de la categoría de IRH. Las cuencas con vulnerabilidad "Muy alta" (C16, C20, C28, C30, C32, C51) se ubican predominantemente en la parte noreste de la región, mientras que un gran grupo de cuencas de vulnerabilidad "Baja" se encuentra en las partes central y occidental de la región. Las cuencas de vulnerabilidad "Muy baja" (C17, C18, C19, C21, C22, C44, C45, C70, C74, C75) se concentran principalmente en la parte centro-oriental de la región.
 
-```{r}
-# Cargar datos
-mapa_list <- readRDS("./www/data/demandaHidrica/historica/agricola/mapa_list.rds")
-mapa_df   <- readRDS("./www/data/demandaHidrica/historica/agricola/mapa_df.rds")
-colstops  <- readRDS("./www/data/demandaHidrica/historica/agricola/colstops.rds")
 
-# Definir los intervalos y colores
-breaks <- c(0, 1.7, 7.0, 20.1, 60.7, 150)
-labels <- c("0.0-1.7", "1.7-7.0", "7.0-20.1", "20.1-60.7", "60.7+")
-colores <- c("#f9fdcd", "#daf0b2", "#a4d99a", "#65ba7c", "#439365")
+## Figuras {.tabset data-width="600"}
+### Figura 9. Índice de Retención y Regulación Hídrica
+<img src="./www/data/indices/historicos/IRH.png" alt="Figura 9" width="90%">
 
-# Crear gráfico
-highchart() %>%
-    hc_add_series_map(
-        map = mapa_list, 
-        df = mapa_df, 
-        name = "Demanda Agrícola", 
-        value = "DEM_AGR",  # <- Asegura que sea numérico
-        joinBy = "Name",
-        dataLabels = list(enabled = FALSE),
-        tooltip = list(pointFormat = "{point.Name}: {point.value} Hm³/año") # <- Usa {point.value}
-    ) %>%
-    hc_colorAxis(
-        stops = colstops, 
-        type = "category",
-        dataClasses = lapply(seq_along(labels), function(i) {
-            list(from = breaks[i], to = breaks[i+1], color = colores[i], name = labels[i])
-        })
-    ) %>%
-    hc_mapNavigation(enabled = TRUE)
+### Figura 10. Caudal Ambiental
+<img src="./www/data/indices/historicos/IUA_a.png" alt="Figura 10" width="90%">
 
-```
+### Figura 11. Índice del uso del agua
+<img src="./www/data/indices/historicos/IUA_b.png" alt="Figura 11" width="90%">
 
-### SECTOR PECUARIO [Hm³ año⁻¹]
+### Figura 12. Índice de vulnerabilidad al desabastecimiento superficial
+<img src="./www/data/indices/historicos/IVH.png" alt="Figura 12" width="90%">
 
-```{r}
-# Cargar datos
-mapa_list <- readRDS("./www/data/demandaHidrica/historica/pecuaria/mapa_list.rds")
-mapa_df   <- readRDS("./www/data/demandaHidrica/historica/pecuaria/mapa_df.rds")
-colstops  <- readRDS("./www/data/demandaHidrica/historica/pecuaria/colstops.rds")
+# CAMBIO CLIMÁTICO {data-navmenu="ÍNDICES"}
 
-# Definir los intervalos y colores
-breaks <- c(0.0, 0.247, 0.511, 0.842, 1.834, 2.5)
-labels <- c("0.003-0.247", "0.247-0.511", "0.511-0.842", "0.842-1.834", "1.834+")
-colores <- c("#feefd9", "#fdd9ad", "#fdb288", "#f1816b", "#d34941")
+## Column {.tabset data-width="400"}
 
-# Crear gráfico
-highchart() %>%
-    hc_add_series_map(
-        map = mapa_list, 
-        df = mapa_df, 
-        name = "Demanda Pecuaria", 
-        value = "DEM_PEC",  # <- Asegura que sea numérico
-        joinBy = "Name",
-        dataLabels = list(enabled = FALSE),
-        tooltip = list(pointFormat = "{point.Name}: {point.value} Hm³/año") # <- Usa {point.value}
-    ) %>%
-    hc_colorAxis(
-        stops = colstops, 
-        type = "category",
-        dataClasses = lapply(seq_along(labels), function(i) {
-            list(from = breaks[i], to = breaks[i+1], color = colores[i], name = labels[i])
-        })
-    ) %>%
-    hc_mapNavigation(enabled = TRUE) 
+### IRH
+La <b>Figura 13</b>, contiene información sobre el comportamiento del Índice de Regulación y Retención Hídrica (IRH) en distintas subcuencas bajo dos escenarios de cambio climático: SSP2-4.5 y SSP5-8.5. Los valores representan el cambio porcentual con respecto al escenario de referencia, donde valores positivos indican una mejora en la regulación y retención hídrica, mientras que valores negativos señalan un deterioro.
 
-```
+### OHTS
+Continuando con la caracterización de la oferta hídrica, se introduce el Índice de Oferta Hídrica Total Superficial (OHTS). Este índice cuantifica el volumen total de agua superficial disponible en cada subcuenca. Representa la cantidad bruta de agua que fluye en ríos, arroyos y otros cuerpos de agua superficial, constituyendo la base del recurso hídrico disponible. Comprender la distribución espacial de este índice y cómo se modifica ante el cambio climático es esencial para evaluar el potencial hídrico de cada subcuenca y anticipar posibles déficits o excedentes en la oferta de agua. La <b>Figura 14</b>, ilustra el cambio porcentual de este índice, comparando escenarios de cambio climático con los valores de referencia. Un valor positivo y distante de cero señala una mejora notable del índice, mientras que un valor negativo indica un deterioro considerable. 
 
-### SECTOR AGUA POTABLE [Hm³ año⁻¹]
+### IUA
+La <b>Figura 15</b>, ilustra espacialmente el Índice de Uso del Agua (IUA) en las subcuencas. Los mapas de la columna izquierda presentan el IUA bajo el escenario de cambio climático SSP2-4.5, mientras que los de la columna derecha corresponden al escenario SSP5-8.5. En cuanto a las filas, la superior muestra el IUA para el percentil 5%, representando condiciones de uso de agua menos severas; la fila central para el percentil 50%, indicando un uso más probable; y la fila inferior para el percentil 95%, reflejando condiciones de uso de agua severas. A continuación, se destacarán los patrones espaciales más relevantes y las implicaciones del comportamiento del IUA en cada uno de estos escenarios de cambio climático para las condiciones indicadas.
 
-```{r}
-# Cargar datos
-mapa_list <- readRDS("./www/data/demandaHidrica/historica/domiciliaria/mapa_list.rds")
-mapa_df   <- readRDS("./www/data/demandaHidrica/historica/domiciliaria/mapa_df.rds")
-colstops  <- readRDS("./www/data/demandaHidrica/historica/domiciliaria/colstops.rds")
+### IVH
+Finalmente, para complementar la visión de la dinámica hídrica, se introduce el índice de vulnerabilidad hídrica por desabastecimiento (IVH) desarrollado por el IDEAM. Este índice evalúa la susceptibilidad al desabastecimiento del agua superficial de cada unidad hidrográfica de análisis, considerando factores como el uso del agua (i.e., socioeconómicos) y la capacidad de regulación hídrica. Un alto índice de vulnerabilidad señala áreas donde los recursos hídricos son más frágiles y susceptibles al estrés, haciendo prioritario implementar medidas de adaptación y gestión (<b>Figura 16</b>). 
 
-# Definir los intervalos y colores
-breaks <- c(0.0, 0.44, 1.44, 3.15, 8.65, 13)
-labels <- c("0.0-0.44", "0.44-1.44", "1.44-3.15","3.15-8.65", "8.65+")
-colores <- c("#e9f2f7", "#c7d9e9", "#a9b7d8", "#a287c0", "#9d56a5")
+## Figuras {.tabset data-width="600"}
+### Figura 13. Índice de regulación y retención hídrica (CC)
+<img src="./www/data/indices/cc/IRH.png" alt="Figura 13" width="90%">
 
-# Crear gráfico
-highchart() %>%
-    hc_add_series_map(
-        map = mapa_list, 
-        df = mapa_df, 
-        name = "Demanda Domiciliaria", 
-        value = "DEM_DOM",  # <- Asegura que sea numérico
-        joinBy = "Name",
-        dataLabels = list(enabled = FALSE),
-        tooltip = list(pointFormat = "{point.Name}: {point.value} Hm³/año") # <- Usa {point.value}
-    ) %>%
-    hc_colorAxis(
-        stops = colstops, 
-        type = "category",
-        dataClasses = lapply(seq_along(labels), function(i) {
-            list(from = breaks[i], to = breaks[i+1], color = colores[i], name = labels[i])
-        })
-    ) %>%
-    hc_mapNavigation(enabled = TRUE) 
+### Figura 14. Índice oferta hídrica total superficial (CC)
+<img src="./www/data/indices/cc/OHTS.png" alt="Figura 14" width="90%">
 
-```
+### Figura 15. Índice de Uso del Agua (CC)
+<img src="./www/data/indices/cc/IUA.png" alt="Figura 15" width="90%">
 
-## Column {data-width="400"}
+### Figura 16. Índice de vulnerabilidad hídrica por desabastecimiento (CC)
+<img src="./www/data/indices/cc/IVH.png" alt="Figura 16" width="90%">
 
-### Consulta de Demandas por Cuencas
+# CAMBIO CLIMÁTICO {data-navmenu="CAMBIO CLIMÁTICO"}
 
-<input type="text" id="nameFilter" placeholder="Filtrar por Cuenca">
+## Column {.tabset data-width="400"}
 
-::: {#grafico-container style="width:100%; height:500px;"}
-:::
+### Introducción
+Con el ánimo de comprender cómo la disponibilidad del agua en la región Boyacá-Santander se puede ver afectada por diversos escenarios de cambio climático para el período 2040 – 2070, se evaluaron las condiciones climáticas resultantes de los Modelos de Circulación General (GCM por sus siglas en inglés) del Sexto Informe de Evaluación del Panel Intergubernamental de Cambio Climático (AR6-IPCC por sus siglas en inglés). En particular, se consideraron los GCM que cuentan con información de precipitación y temperaturas media, mínima y máxima, además de estar disponibles para los cuatro escenarios prioritarios del AR6-IPCC (SSP 1-2.6, SSP 2-4.5, SSP 3-7.0 y SSP 5-8.5), como se presentó en Producto B2 de esta consultoría, resultando en un total de 20 GCM y 4 escenarios SSP.
+En esta sección se presentan los resultados de las proyecciones climáticas para la región Boyacá-Santander a partir de los GCM, la representatividad local de los GCM y la priorización de estos para la definición de los ensambles hidrológicos.
 
-```{=html}
-<script src="https://code.highcharts.com/highcharts.js"></script>
-```
+### Proyecciones climáticas
+Las <b>Figura 17</b> a <b>Figura 20</b> muestran la distribución espacial de los cambios promedio en precipitación, temperatura media, mínima y máxima. Los cambios en precipitación en el escenario SSP 1-2.6, si bien muestra un promedio de +0.6 %, la zona sur muestra cambios mayores (aumento menor a 5 %) que en el resto de la región (cambio menor a 2.5 %). Este patrón se mantiene en los otros escenarios, sin embargo, tiende a cambios más negativos para los escenarios más pesimistas. En cuanto a las temperaturas, en el escenario SSP 1-2.6 tiende a haber un cambio homogéneo a lo largo de la región, pero para los escenarios más pesimistas, los cambios se acentúan hacia el este. En este sentido, las proyecciones indican que el este de la región presentaría condiciones más adversas asociadas a una mayor disminución en la precipitación y mayor aumento en la temperatura.
 
-```{=html}
-<script>
-    // Cargar el JSON con Fetch API
-    fetch("./www/data/demandaHidrica/tablaDatosHistoricos.json")
-        .then(response => response.json())
-        .then(datos => {
-            let datosOriginales = datos; // Guardar los datos originales para el filtro
+## Figuras {.tabset data-width="600"}
+### Figura 17. Cambio medio proyectado para la precipitación anual
+<img src="./www/data/cc/P.png" alt="Figura 13" width="90%">
 
-            function actualizarGrafico(filtroCuenca = "") {
-                let datosFiltrados = { Name: [], DEM_PEC: [], DEM_DOM: [], DEM_AGR: [], DEM_TOT: [] };
+### Figura 18. Cambio medio proyectado para la temperatura media
+<img src="./www/data/cc/Tmed.png" alt="Figura 14" width="90%">
 
-                for (let i = 0; i < datosOriginales.Name.length; i++) {
-                    if (datosOriginales.Name[i].toLowerCase().includes(filtroCuenca.toLowerCase())) {
-                        datosFiltrados.Name.push(datosOriginales.Name[i]);
-                        datosFiltrados.DEM_PEC.push(datosOriginales.DEM_PEC[i]);
-                        datosFiltrados.DEM_DOM.push(datosOriginales.DEM_DOM[i]);
-                        datosFiltrados.DEM_AGR.push(datosOriginales.DEM_AGR[i]);
-                        datosFiltrados.DEM_TOT.push(datosOriginales.DEM_TOT[i]);
-                    }
-                }
+### Figura 19. Cambio medio proyectado para la temperatura mínima
+<img src="./www/data/cc/Tmin.png" alt="Figura 14" width="90%">
 
-                Highcharts.chart("grafico-container", {
-                    chart: { type: "bar" },
-                    title: { text: "Demanda Hídrica por Cuenca" },
-                    xAxis: { categories: datosFiltrados.Name },
-                    yAxis: { title: { text: "Valor de la Demanda" } },
-                    series: [
-                        { name: "PECUARIA", data: datosFiltrados.DEM_PEC, color: "#d34941" },
-                        { name: "AGUA POTABLE", data: datosFiltrados.DEM_DOM, color: "#9d56a5" },
-                        { name: "AGRICOLA", data: datosFiltrados.DEM_AGR, color: "#439365" },
-                        { name: "TOTAL", data: datosFiltrados.DEM_TOT, color: "#4f71b3" }
-                    ]
-                });
-            }
-
-            // Manejar cambios en el filtro de Nombre (ahora Cuenca)
-            document.getElementById("nameFilter").addEventListener("input", function() {
-                actualizarGrafico(this.value);
-            });
-
-            // Renderizar el gráfico por primera vez con todos los datos
-            actualizarGrafico();
-        })
-        .catch(error => console.error("Error cargando JSON:", error));
-</script>
-```
-
-# CAMBIO CLIMÁTICO {data-navmenu="DEMANDA HÍDRICA"}
-
-<https://rpubs.com/renzo_caceres_rossiv/dashboard_menu_ieee>
+### Figura 120. Cambio medio proyectado para la temperatura máxima
+<img src="./www/data/cc/Tmax.png" alt="Figura 14" width="90%">
